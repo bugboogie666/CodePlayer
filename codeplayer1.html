@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>CodePlayer</title>
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+     integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+     crossorigin="anonymous">
+     </script>
+
+     <link href="jqueryui/jquery-ui.css" rel="stylesheet">
+
+     <script src="jqueryui/jquery-ui.js"></script>
+
+   <style type="text/css">
+
+    body {
+
+      font-family: sans-serif;
+      padding: 0;
+      margin: 0;
+
+    }
+
+    #header {
+
+      background-color: #EDEDED;
+
+      height: 25px;
+      padding: 5px;
+
+    }
+
+     #buttonsPanel {
+       width: 230px;
+       height: 20px;
+       margin: 0 auto;
+       background-color: #EDEDED;
+     }
+
+     .toggleButton {
+       float: left;
+       padding: 3px;
+       border: solid grey 1px;
+       border-right: none;
+       font-size: 90%;
+
+     }
+
+     #html {
+       border-top-left-radius: 4px;
+       border-bottom-left-radius: 4px;
+     }
+     #output {
+       border-right: solid grey 1px;
+       border-bottom-right-radius: 4px;
+       border-top-right-radius: 4px;
+     }
+
+     #logo{
+
+       font-weight: bold;
+       float: left;
+       font-size: 120%;
+       padding: 3px 5px;
+     }
+
+
+     textarea {
+
+       resize: none;
+       border-top: none;
+
+     }
+
+     .codeframe {
+       float: left;
+
+
+     }
+     iframe {
+       border: none;
+     }
+
+
+     .active{
+
+       background-color: #ADCFEE;
+
+     }
+     .highlitedButton {
+
+       background-color: #64EAA8;
+
+     }
+
+   </style>
+
+  </head>
+  <body>
+
+    <div id="header">
+
+        <div id="logo">
+
+          CodePlayer
+
+        </div>
+
+        <div id="buttonsPanel">
+
+          <div class="toggleButton active" id="html">HTML</div>
+          <div class="toggleButton active" id="css">CSS</div>
+          <div class="toggleButton active" id="javascript">JavaScript</div>
+          <div class="toggleButton active" id="output">Output</div>
+
+        </div>
+
+    </div>
+
+    <div id="columnscontainer">
+
+      <textarea class="codeframe" id="frameHTML"><p id="paragraph">hello world!</p></textarea>
+
+      <textarea class="codeframe" id="frameCSS">p{color:green;}</textarea>
+
+      <textarea class="codeframe" id="frameJS">document.getElementById("paragraph").innerHTML = "Hello Jakub";</textarea>
+
+      <iframe class="codeframe" id="frameOUT"></iframe>
+
+    </div>
+
+
+    <script type="text/javascript">
+
+
+      //test jquery installation
+
+      if (typeof jQuery == "undefined") {
+
+        console.log('jQuery is not installed!');
+
+      }else{
+        console.log('jQuery was installed properly!');
+      }
+      //HELPER FUNCTION
+      function setInputType(){
+
+          $(".codeframe").click(function() {
+
+            if ($(this).attr("id") == "frameHTML") {
+                inputType = "#frameHTML";
+                //console.log(inputType);
+            }
+            if ($(this).attr("id") == "frameCSS") {
+                inputType = "#frameCSS";
+                //console.log(inputType);
+            }
+            if ($(this).attr("id") == "frameJS") {
+                inputType = "#frameJS";
+                //console.log(inputType);
+            }
+          });
+
+      }
+
+      function updateIframe(){
+
+        var myFrameHTML = $("#frameOUT").contents().find('html');
+        //var myFrameJS = document.getElementById("#frameOUT").contentWindow;
+
+
+        var valueCSS = $("#frameCSS").val();
+        var valueHTML =  $("#frameHTML").val();
+        var valueJS = $("#frameJS").val();
+        //var textareaValue = $(inputType).val();
+
+        var htmlDoc = "<html><head><style type='text/css'>" + valueCSS + "</style></head><body>" + valueHTML + "</body></html>";
+        myFrameHTML.html(htmlDoc);
+        if(inputType == "#frameHTML" || inputType == "#frameCSS"){
+
+          myFrameHTML.html(htmlDoc);
+
+        }//if(inputType == "#frameJS"){
+          //console.log(scriptTag);
+        document.getElementById("frameOUT").contentWindow.eval(valueJS);
+        //}
+
+      }
+      /////////////////////////////////////////////////////////////////////////
+      ///////////////////SCRIPT SELF///////////////////////////////////////////
+      /////////////////////////////////////////////////////////////////////////
+
+      //button styles control
+      $(".toggleButton").hover(function() {
+
+        $(this).addClass("highlitedButton");
+
+      });
+
+      $(".toggleButton").mouseout(function() {
+
+        $(this).removeClass("highlitedButton");
+
+      });
+
+      $(".toggleButton").click(function(){
+
+        $(this).toggleClass("active");
+        //$(this).removeClass("highlitedButton")
+
+      });
+
+      //buttons clicking
+      var counter = 4;
+
+      $(".toggleButton").click(function() {
+
+        if ($(this).attr("id") == "html") {
+
+          if ($("#frameHTML").css("display") == "none") {
+
+            $("#frameHTML").fadeIn();
+            counter +=1;
+
+          }else {
+
+            $("#frameHTML").css("display", "none");
+            counter -=1;
+          }
+
+        }
+        if ($(this).attr("id") == "css") {
+
+          if ($("#frameCSS").css("display") == "none") {
+
+            $("#frameCSS").fadeIn();
+            counter +=1;
+
+          }else {
+
+            $("#frameCSS").css("display", "none");
+            counter -=1;
+          }
+
+        }
+        if ($(this).attr("id") == "javascript") {
+
+          if ($("#frameJS").css("display") == "none") {
+
+            $("#frameJS").fadeIn();
+            counter +=1;
+
+          }else {
+
+            $("#frameJS").css("display", "none");
+            counter -=1;
+          }
+
+        }
+        if ($(this).attr("id") == "output") {
+
+          if ($("#frameOUT").css("display") == "none") {
+
+            $("#frameOUT").fadeIn();
+            counter +=1;
+
+          }else {
+
+            $("#frameOUT").css("display", "none");
+            counter -=1;
+          }
+        }
+      });
+      //...and set a screen proportion
+      $("header").width($(window).width());
+      $(".codeframe").height($(window).height() - $("#header").height() - 15);
+      $(".codeframe").width($(window).width()/counter-6);
+
+
+      $(".toggleButton").click(function(){
+
+        $(".codeframe").width($(window).width()/counter-6);
+
+      });
+      //set type of input in a variable inputType
+      var inputType = setInputType();
+      //Let me get the proper output
+      updateIframe();
+      $("#frameHTML, #frameCSS").on('change keyup paste', function() {
+        updateIframe();
+      });
+
+      $("#frameJS").on('click', function() {
+        updateIframe();
+      });
+
+      //$("#frameCSS").on('change keyup paste', function() {
+      //  updateIframe();
+      //});
+
+
+
+
+    </script>
+
+  </body>
+</html>
